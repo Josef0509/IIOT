@@ -6,9 +6,13 @@ from dash import html
 from dash.dependencies import Input, Output
 import plotly.express as px
 
+import os
+dirname = os.path.dirname(__file__)
+filename = os.path.join(dirname, '../IIOT_DB.db')
+
 # Connect to the database
 def fetch_data(query):
-    conn = sqlite3.connect('IIOT_DB.db')
+    conn = sqlite3.connect(filename)
     df = pd.read_sql_query(query, conn)
     conn.close()
     return df
@@ -48,17 +52,25 @@ def update_graph(selected_table):
         fig = px.scatter(df, x='time', y='fill_level_grams', color='color', title='Dispenser Fill Levels', 
                          color_discrete_map={'red': 'red', 'blue': 'blue', 'green': 'green'}, 
                          hover_data=['fill_level_grams', 'recipe', 'bottle'])
+        
     elif selected_table == 'DispVibration':
-        fig = px.scatter(df, x='time', y='vibration_index', color='color', title='Dispenser Vibration Index')
+        fig = px.scatter(df, x='time', y='vibration_index', color='color', title='Dispenser Vibration Index',
+                         color_discrete_map={'red': 'red', 'blue': 'blue', 'green': 'green'},
+                         hover_data=['vibration_index', 'bottle'])
+        
     elif selected_table == 'Temperature':
         fig = px.line(df, x='time', y='temperature_C', title='Temperature Over Time')
+        
     elif selected_table == 'finalWeight':
-        fig = px.bar(df, x='bottle', y='final_weight', title='Final Weight of Bottles')
+        fig = px.scatter(df, x='time', y='final_weight', title='Final Weight of Bottles', hover_data=['bottle'])
+
     elif selected_table == 'dropVibration':
-        fig = px.scatter(df, x='n', y='dropVibration', color='bottle', title='Drop Vibrations')
+        fig = px.line(df, x='n', y='dropVibration', color='bottle', title='Drop Vibrations', hover_data=['bottle'])
+        fig.update_layout(autotypenumbers='convert types')
+
     elif selected_table == 'ground_truth':
-        fig = px.bar(df, x='bottle', y='is_cracked', title='Ground Truth: Cracked Bottles')
-    
+        fig = px.scatter(df, x='bottle', y='is_cracked', title='Ground Truth: Cracked Bottles')
+
     return fig
 
 # Run the app
