@@ -1,10 +1,13 @@
 import sqlite3
 import json
+import os
 
 
 class DB:
     def __init__(self):
-        self.conn = sqlite3.connect('IIOT_DB.db')
+        dirname = os.path.dirname(__file__)
+        filename = os.path.join(dirname, '../IIOT_DB.db')
+        self.conn = sqlite3.connect(filename)
         self.c = self.conn.cursor()
 
     def query(self, query: str, params: tuple = None):
