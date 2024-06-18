@@ -1,38 +1,17 @@
 import sys
 import os
 import paho.mqtt.client as mqtt
+import config
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from database import DB_c
 
-broker = "158.180.44.197"
-port = 1883
-topics = ["iot1/teaching_factory_fast/dispenser_red", 
-          "iot1/teaching_factory_fast/dispenser_red/vibration", 
-          "iot1/teaching_factory_fast/temperature", 
-          "iot1/teaching_factory_fast/dispenser_blue",
-          "iot1/teaching_factory_fast/dispenser_blue/vibration",
-          "iot1/teaching_factory_fast/dispenser_green",
-          "iot1/teaching_factory_fast/dispenser_green/vibration",
-          "iot1/teaching_factory_fast/scale/final_weight",
-          "iot1/teaching_factory_fast/drop_vibration",
-          "iot1/teaching_factory_fast/ground_truth"
-          ]
-
-"""
-"iot1/teaching_factory_fast/dispenser_red", 
-          "iot1/teaching_factory_fast/dispenser_red/vibration", 
-          "iot1/teaching_factory_fast/temperature", 
-          "iot1/teaching_factory_fast/dispenser_blue",
-          "iot1/teaching_factory_fast/dispenser_blue/vibration",
-          "iot1/teaching_factory_fast/dispenser_green",
-          "iot1/teaching_factory_fast/dispenser_green/vibration",
-
-          "iot1/teaching_factory_fast/scale/final_weight",
-          "iot1/teaching_factory_fast/drop_vibration",
-          "iot1/teaching_factory_fast/ground_truth"
-
-"""
+# Load configuration from config.py
+broker = config.BROKER
+port = config.PORT
+topics = config.TOPICS
+username = config.USERNAME
+password = config.PASSWORD
 
 payload = "on"
 myDB = DB_c.DB()
