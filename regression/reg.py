@@ -99,30 +99,39 @@ model = LinearRegression()
 model.fit(X_train, y_train)
 
 model.coef_
+# %%
+# Prediction Training
 
-# y_pred = model.predict(X_train)
+y_pred = model.predict(X_train)
 
+# make MSE for y_pred of training data
+from sklearn.metrics import mean_squared_error
+mse_training = mean_squared_error(y_train, y_pred)
+mse_training
+# %%
+# Prediction Testing
+y_pred = model.predict(X_test)
 
-# df = pd.DataFrame({'Actual': y_train, 'Predicted': y_pred})
-# # add column for error in %
-# df['Error'] = np.abs((df['Actual'] - df['Predicted']) / df['Actual'])
+# make MSE for y_pred of training data
+from sklearn.metrics import mean_squared_error
+mse_test = mean_squared_error(y_test, y_pred)
+mse_test
+# %%
 
-# #average error
-# error_mean = df['Error'].mean() 
-# error_mean
+# make table of mse; first column temperature_mean_C, disp_vibration_red, disp_vibration_green, disp_vibration_blue, fill_level_grams_red, fill_level_grams_green, fill_level_grams_blue, second column linear model type, third column mse-training, fourth column mse-test
+mse_table = pd.DataFrame(columns=['Genutzte Spalten', 'linear model type', 'mse-training', 'mse-test'])
+#fill genutzet spalten
+mse_table['Genutzte Spalten'] = ['temperature_mean_C, disp_vibration_red, disp_vibration_green, disp_vibration_blue, fill_level_grams_red, fill_level_grams_green, fill_level_grams_blue']
+#fill linear model type
+mse_table['linear model type'] = 'Linear Regression'
+#fill mse-training
+mse_table['mse-training'] = mse_training
+#fill mse-test
+mse_table['mse-test'] = mse_test
+mse_table
 
-# # %%
-# y_pred = model.predict(X_test)
-
-
-# df = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
-# # add column for error in %
-# df['Error'] = np.abs((df['Actual'] - df['Predicted']) / df['Actual'])
-
-# #average error
-# error_mean = df['Error'].mean() 
-# error_mean
-x
+#table to csv
+mse_table.to_csv('mse_table.csv')
 
 # %%
 

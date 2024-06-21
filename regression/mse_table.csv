@@ -1,0 +1,2 @@
+,Genutzte Spalten,linear model type,mse-training,mse-test
+0,"temperature_mean_C, disp_vibration_red, disp_vibration_green, disp_vibration_blue, fill_level_grams_red, fill_level_grams_green, fill_level_grams_blue",Linear Regression,13.769963367115745,1.040878510828232
