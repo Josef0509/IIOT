@@ -77,3 +77,9 @@ class DB:
             print("Stored success: " + str(success))
         else:
             print("no case for this data: " + str(data))
+
+    def getDropVibr(self):
+        return self.query("SELECT * FROM dropVibration")
+    
+    def getBottleCracked(self):
+        return self.query("SELECT * FROM ground_truth")
