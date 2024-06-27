@@ -60,32 +60,47 @@ f_peak = is_peak.apply(lambda x: x.index[x].tolist(), axis=1)
 # only allow 3 peaks, discard the rest
 f_peak = f_peak.apply(lambda x: x[:3])
 
-# remove the last row
+# remove the last rows to have equal length
 f_peak = f_peak[:-2]
 
 # unpack the list uín the firat column to 3 columns
 f_peak = pd.DataFrame(f_peak.to_list(), columns=['f1', 'f2', 'f3'])
-
-
-# %%
-knn = KNeighborsClassifier(n_neighbors=3)
 data = f_peak.values
+knn = KNeighborsClassifier(n_neighbors=5)
 classes = cracked['is_cracked'].values
 
-data[1]
+# %%    fit on complete data
+
 knn.fit(data, classes)
+predictions = knn.predict(data)
+accuracy = np.mean(predictions == classes)
+print("Accuracy with 100% trainset: "+str(accuracy))
 
+# create confusion matrix
+confusion_matrix = pd.crosstab(classes, predictions, rownames=['Actual'], colnames=['Predicted'])
+confusion_matrix
+#calculate f1 score
+f1 = 2*confusion_matrix.iloc[1,1]/(2*confusion_matrix.iloc[1,1]+confusion_matrix.iloc[0,1]+confusion_matrix.iloc[1,0])
+print("F1 score: "+str(f1))
 
+# %%   fit on 80% of the data and test on the other 20%
+split = int(len(data)*0.8)
+knn.fit(data[:split], classes[:split])
+predictions = knn.predict(data[split:])
+accuracy = np.mean(predictions == classes[split:])
+print("Accuracy with 80% trainset: "+str(accuracy))
 
+# create confusion matrix
+confusion_matrix = pd.crosstab(classes[split:], predictions, rownames=['Actual'], colnames=['Predicted'])
+confusion_matrix
+#calculate f1 score
+f1_1 = 2*confusion_matrix.iloc[1,1]/(2*confusion_matrix.iloc[1,1]+confusion_matrix.iloc[0,1]+confusion_matrix.iloc[1,0])
+print("F1 score: "+str(f1_1))
+
+# %% 
+
+klass_table = pd.DataFrame(columns=['Genutzte Features', 'Modell-Typ', 'F1-Score (Training)', 'F1-Score (Test)'])
+klass_table.loc[0] = ['dropVibration (fft -> threshold of 0.3*max -> 3 Frequenzen der Peaks)', 'KNN mit 5 Nachbarn', f1, f1_1]
+
+klass_table
 #%%
-new_f1 = 15
-new_f2 = 60
-new_f3 = 140
-new_point = np.array([new_f1, new_f2, new_f3],)
-new_point = new_point.reshape(1, -1)
-print(new_point)
-
-prediction = knn.predict(new_point)
-# %%
-prediction
-# %%
